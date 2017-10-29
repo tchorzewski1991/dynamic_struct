@@ -4,4 +4,8 @@
 require_relative './dynamic_struct/version'
 
 module DynamicStruct
+  class << self
+    def build(arguments)
+    end
+  end
 end
