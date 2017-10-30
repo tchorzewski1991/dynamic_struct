@@ -10,4 +10,10 @@ RSpec.describe DynamicStruct do
   it 'expects subject to be a module' do
     expect(subject.class).to be(Module)
   end
+
+  describe 'constants -' do
+    it 'expects subject to define Corpus constant' do
+      expect(subject.const_defined?(:Corpus)).to eq(true)
+    end
+  end
 end
