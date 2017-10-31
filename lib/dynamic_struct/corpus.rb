@@ -3,5 +3,8 @@ module DynamicStruct
     def initialize(arguments)
       @atoms = {}
     end
+
+    private
+    attr_reader :atoms
   end
 end
