@@ -4,6 +4,10 @@ module DynamicStruct
       @atoms = {}
     end
 
+    def atoms?
+      atoms.any?
+    end
+
     private
     attr_reader :atoms
   end
