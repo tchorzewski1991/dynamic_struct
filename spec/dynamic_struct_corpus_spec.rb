@@ -26,4 +26,45 @@ RSpec.describe DynamicStruct::Corpus do
       end
     end
   end
+
+  describe 'custom instance methods -' do
+    describe '#atoms -' do
+      it 'expects to define #atoms as private attribute reader' do
+        expect(subject.private_method_defined?(:atoms)).to eq(true)
+      end
+
+      it 'refutes to call #atoms from public interface' do
+        expect { corpus.atoms }.to raise_error(NoMethodError)
+      end
+    end
+
+    describe '#atoms? -' do
+      it 'expects to define #atoms? as public instance method' do
+        expect(subject.public_method_defined?(:atoms?)).to eq(true)
+      end
+
+      it 'expects to return false for empty atoms ivar' do
+        expect(corpus.atoms?).to eq(false)
+      end
+    end
+
+    describe '#inspect -' do
+      it 'expects to define #inspect as public instance method' do
+        expect(subject.public_method_defined?(:inspect)).to eq(true)
+      end
+
+      context 'when atoms present -' do
+        it 'expects to match schema for corpus with atoms' do
+          corpus.instance_variable_set(:@atoms, { key: :value })
+          expect(corpus.inspect).to match(/<DynamicStruct::Corpus key=:value>/)
+        end
+      end
+
+      context 'when atoms missing -' do
+        it 'expects to match schema for corpus without atoms' do
+          expect(subject.new({}).inspect).to match(/<DynamicStruct::Corpus>/)
+        end
+      end
+    end
+  end
 end
