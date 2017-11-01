@@ -1,3 +1,12 @@
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter %r{^\/spec|^\/benchmarks}
+
+  add_group 'DynamicStruct', '/lib/dynamic_struct.rb'
+  add_group 'DynamicStruct::Corpus', '/lib/dynamic_struct/corpus.rb'
+end
+
 require "bundler/setup"
 require "dynamic_struct"
 
