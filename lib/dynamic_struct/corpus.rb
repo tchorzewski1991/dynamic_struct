@@ -1,7 +1,7 @@
 module DynamicStruct
   class Corpus
     def initialize(arguments)
-      @atoms = {}
+      @atoms = {} and verify(arguments)
     end
 
     def inspect
@@ -23,5 +23,9 @@ module DynamicStruct
 
     private
     attr_reader :atoms
+
+    def verify(arguments)
+      Hash === arguments && arguments.any?
+    end
   end
 end
