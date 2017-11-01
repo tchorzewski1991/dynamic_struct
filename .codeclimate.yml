@@ -16,7 +16,6 @@ ratings:
   - "**.rb"
 exclude_paths:
 - bin/
-- spec/
 - benchmarks/
 - dynamic_struct.gemspec
 - Gemfile
