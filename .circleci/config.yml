@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/dynamic_struct
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+            - gem-cache-{{ arch }}-{{ .Branch }}
+            - gem-cache
+
+      - run: bundle install --path vendor/bundle
+
+      - save_cache:
+          key: gem-cache-{{ arch }}-{{ .Branch }}-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Run rspec
+          command: |
+            bundle exec rspec --profile 10 \
+                              --format progress
