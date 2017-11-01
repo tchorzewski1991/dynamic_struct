@@ -5,11 +5,11 @@ RSpec.describe DynamicStruct::Corpus do
   let(:arguments) { { key: 'value' } }
   let(:corpus) { subject.new(arguments) }
 
-  let(:inspector) {
-    -> name {
+  let(:inspector) do
+    ->(name) do
       klass = Class.new(subject) do
         attr_accessor :induction
-        class_eval %Q(
+        class_eval %(
           def #{name}(*)
             self.induction = true
             super
@@ -25,8 +25,8 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       result
-    }
-  }
+    end
+  end
 
   describe 'initialize -' do
     it 'expects to initialize atoms ivar' do
@@ -82,7 +82,7 @@ RSpec.describe DynamicStruct::Corpus do
 
       context 'when atoms present -' do
         it 'expects to match schema for corpus with atoms' do
-          corpus.instance_variable_set(:@atoms, { key: :value })
+          corpus.instance_variable_set(:@atoms, key: :value)
           expect(corpus.inspect).to match(/<DynamicStruct::Corpus key=:value>/)
         end
       end
@@ -101,7 +101,7 @@ RSpec.describe DynamicStruct::Corpus do
 
       context 'when arguments present -' do
         it 'expects to return true for Hash argument' do
-          expect(corpus.send(:verify, { 'key' => 'value' })).to eq(true)
+          expect(corpus.send(:verify, key: 'value')).to eq(true)
         end
 
         it 'expects to return false for empty Hash argument' do

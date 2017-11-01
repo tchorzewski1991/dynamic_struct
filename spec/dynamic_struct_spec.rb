@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe DynamicStruct do
   let(:subject) { described_class }
 
-  it "has a version number" do
+  it 'has a version number' do
     expect(subject::VERSION).not_to be nil
   end
 
@@ -16,7 +16,6 @@ RSpec.describe DynamicStruct do
       expect(subject.const_defined?(:Corpus)).to eq(true)
     end
   end
-
 
   describe 'custom methods -' do
     context '#build -' do

@@ -8,12 +8,12 @@ module DynamicStruct
       klass = self.class
 
       if atoms?
-        %Q(<%s %s>) % [
+        %(<%s %s>) % [
           klass,
-          atoms.map { |k, v| "%s=%s" % [k, v.inspect] } * ' '
+          atoms.map { |k, v| '%s=%s' % [k, v.inspect] } * ' '
         ]
       else
-        %Q(<%s>) % klass
+        %(<%s>) % klass
       end
     end
 
@@ -22,6 +22,7 @@ module DynamicStruct
     end
 
     private
+
     attr_reader :atoms
 
     def verify(arguments)
