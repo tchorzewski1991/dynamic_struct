@@ -5,6 +5,29 @@ RSpec.describe DynamicStruct::Corpus do
   let(:arguments) { { key: 'value' } }
   let(:corpus) { subject.new(arguments) }
 
+  let(:inspector) {
+    -> name {
+      klass = Class.new(subject) do
+        attr_accessor :induction
+        class_eval %Q(
+          def #{name}(*)
+            self.induction = true
+            super
+          end
+        )
+      end
+
+      result = begin
+        instance = klass.new({})
+        instance.induction
+      rescue NoMethodError
+        false
+      end
+
+      result
+    }
+  }
+
   describe 'initialize -' do
     it 'expects to initialize atoms ivar' do
       expect(corpus.instance_variable_defined?(:@atoms)).to eq(true)
