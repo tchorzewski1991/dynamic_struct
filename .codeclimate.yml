@@ -23,6 +23,7 @@ ratings:
 exclude_paths:
 - bin/
 - benchmarks/
+- spec/
 - dynamic_struct.gemspec
 - Gemfile
 - Gemfile.lock
