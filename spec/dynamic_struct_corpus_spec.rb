@@ -66,5 +66,31 @@ RSpec.describe DynamicStruct::Corpus do
         end
       end
     end
+
+    describe '#verify -' do
+      it 'expects to define #verify as private instance method' do
+        expect(subject.private_method_defined?(:verify)).to eq(true)
+      end
+
+      context 'when arguments present -' do
+        it 'expects to return true for Hash argument' do
+          expect(corpus.send(:verify, { 'key' => 'value' })).to eq(true)
+        end
+
+        it 'expects to return false for empty Hash argument' do
+          expect(corpus.send(:verify, {})).to eq(false)
+        end
+
+        it 'expects to return false for argument other than Hash' do
+          expect(corpus.send(:verify, [])).to eq(false)
+        end
+      end
+
+      context 'when arguments missing -' do
+        it 'expects to raise ArgumentError for missing arguments' do
+          expect { corpus.send(:verify) }.to raise_error(ArgumentError)
+        end
+      end
+    end
   end
 end
