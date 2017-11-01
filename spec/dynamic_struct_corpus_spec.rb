@@ -47,6 +47,10 @@ RSpec.describe DynamicStruct::Corpus do
       it 'expects to set atoms ivar with empty Hash' do
         expect(corpus.instance_variable_get(:@atoms).keys).to be_empty
       end
+
+      it 'expects to call #verify private instance method' do
+        expect(inspector.call('verify')).to eq(true)
+      end
     end
   end
 
