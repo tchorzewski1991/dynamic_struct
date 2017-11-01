@@ -10,7 +10,7 @@ module DynamicStruct
       if atoms?
         %(<%s %s>) % [
           klass,
-          atoms.map { |k, v| '%s=%s' % [k, v.inspect] } * ' '
+          atoms.map { |key, value| '%s=%s' % [key, value.inspect] } * ' '
         ]
       else
         %(<%s>) % klass

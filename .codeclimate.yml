@@ -15,6 +15,9 @@ engines:
       score_threshold: 100.0
   reek:
     enabled: true
+    checks:
+      IrresponsibleModule:
+        enabled: false
 
 ratings:
   paths:
