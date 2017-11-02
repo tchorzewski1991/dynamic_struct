@@ -13,7 +13,7 @@ RSpec.describe DynamicStruct::Corpus do
   # Inspector refers to observer for messages sent to entity
   # during subject initialization
   let(:inspector) do
-    ->(name) do
+    ->(name, arguments = nil) do
       klass = Class.new(subject) do
         attr_accessor :induction
         class_eval %(
@@ -25,8 +25,8 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       result = begin
-        instance = klass.new({})
-        instance.induction
+        instance = klass.new(arguments || {})
+        instance.induction & true
       rescue NoMethodError
         false
       end
@@ -58,6 +58,10 @@ RSpec.describe DynamicStruct::Corpus do
       it 'expects to call #verify private instance method' do
         expect(inspector.call('verify')).to eq(true)
       end
+
+      it 'expects to call #assign private instance method' do
+        expect(inspector.call('assign', key: 'value')).to eq(true)
+      end
     end
   end
 
@@ -67,10 +71,6 @@ RSpec.describe DynamicStruct::Corpus do
 
       it 'expects to define #atoms as private attribute reader' do
         expect(subject.private_method_defined?(:atoms)).to eq(true)
-      end
-
-      it 'expects to return nil when invoked from public interface' do
-        expect(corpus.atoms).to eq(nil)
       end
     end
 
@@ -96,6 +96,10 @@ RSpec.describe DynamicStruct::Corpus do
         expect(subject.public_method_defined?(:inspect)).to eq(true)
       end
 
+      it 'expects to has arity of zero' do
+        expect(subject.instance_method(:inspect).arity).to eq(0)
+      end
+
       context 'when atoms present -' do
         let(:corpus) { constructor.(key: :value) }
 
@@ -114,32 +118,73 @@ RSpec.describe DynamicStruct::Corpus do
     end
 
     describe '#verify -' do
+      let(:corpus) { constructor.({}) }
+
       it 'expects to define #verify as private instance method' do
         expect(subject.private_method_defined?(:verify)).to eq(true)
       end
 
-      context 'when arguments present -' do
-        let(:corpus) { constructor.({}) }
-
-        it 'expects to return true for Hash argument' do
-          expect(corpus.send(:verify, key: 'value')).to eq(true)
-        end
-
-        it 'expects to return false for empty Hash argument' do
-          expect(corpus.send(:verify, {})).to eq(false)
-        end
-
-        it 'expects to return false for argument other than Hash' do
-          expect(corpus.send(:verify, [])).to eq(false)
-        end
+      it 'expects to has arity of one' do
+        expect(subject.instance_method(:verify).arity).to eq(1)
       end
 
-      context 'when arguments missing -' do
-        let(:corpus) { constructor.({}) }
+      it 'expects to return true for non-empty Hash argument' do
+        expect(corpus.send(:verify, key: 'value')).to eq(true)
+      end
 
-        it 'expects to raise ArgumentError for missing arguments' do
-          expect { corpus.send(:verify) }.to raise_error(ArgumentError)
-        end
+      it 'expects to return false for empty Hash argument' do
+        expect(corpus.send(:verify, {})).to eq(false)
+      end
+
+      it 'expects to return false for argument other than Hash' do
+        expect(corpus.send(:verify, [])).to eq(false)
+      end
+    end
+
+    describe '#assign -' do
+      let(:corpus) { constructor.({}) }
+
+      it 'expects to define #assign as private instance method' do
+        expect(subject.private_method_defined?(:assign)).to eq(true)
+      end
+
+      it 'expects to has arity of one' do
+        expect(subject.instance_method(:assign).arity).to eq(1)
+      end
+
+      it 'refutes arguments which wont respond to #each method' do
+        expect { corpus.send(:assign, '') }.to raise_error(NoMethodError)
+      end
+
+      it 'expects to call #new_entry private instance method' do
+        expect(inspector.call('new_entry', key: 'value')).to eq(true)
+      end
+    end
+
+    describe '#new_entry -' do
+      let(:corpus) { constructor.({}) }
+
+      it 'expects to define #new_entry as private instance method' do
+        expect(subject.private_method_defined?(:new_entry)).to eq(true)
+      end
+
+      it 'expects to has arity of two' do
+        expect(subject.instance_method(:new_entry).arity).to eq(2)
+      end
+
+      it 'expects to setup new key-value pair for atoms ivar' do
+        # before
+        expect(corpus.atoms?).to eq(false)
+
+        corpus.send(:new_entry, :key, 'value')
+
+        # after
+        expect(corpus.atoms?).to eq(true)
+      end
+
+      it 'expects to symbilize key argument for each new entry' do
+        corpus.send(:new_entry, 'key', 'value')
+        expect(corpus.instance_variable_get(:@atoms).keys).to include(:key)
       end
     end
   end
