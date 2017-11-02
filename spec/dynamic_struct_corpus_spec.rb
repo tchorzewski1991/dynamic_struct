@@ -13,7 +13,7 @@ RSpec.describe DynamicStruct::Corpus do
   # Inspector refers to observer for messages sent to entity
   # during subject initialization
   let(:inspector) do
-    ->(name) do
+    ->(name, arguments = nil) do
       klass = Class.new(subject) do
         attr_accessor :induction
         class_eval %(
@@ -25,7 +25,7 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       result = begin
-        instance = klass.new({})
+        instance = klass.new(arguments || {})
         instance.induction
       rescue NoMethodError
         false
