@@ -118,13 +118,13 @@ RSpec.describe DynamicStruct::Corpus do
     end
 
     describe '#verify -' do
+      let(:corpus) { constructor.({}) }
+
       it 'expects to define #verify as private instance method' do
         expect(subject.private_method_defined?(:verify)).to eq(true)
       end
 
       context 'when arguments present -' do
-        let(:corpus) { constructor.({}) }
-
         it 'expects to return true for Hash argument' do
           expect(corpus.send(:verify, key: 'value')).to eq(true)
         end
@@ -139,10 +139,32 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       context 'when arguments missing -' do
-        let(:corpus) { constructor.({}) }
-
         it 'expects to raise ArgumentError for missing arguments' do
           expect { corpus.send(:verify) }.to raise_error(ArgumentError)
+        end
+      end
+    end
+
+    describe '#assign -' do
+      let(:corpus) { constructor.({}) }
+
+      it 'expects to define #assign as private instance method' do
+        expect(subject.private_method_defined?(:assign)).to eq(true)
+      end
+
+      context 'when arguments present -' do
+        it 'refutes arguments which wont respond to #each method' do
+          expect { corpus.send(:assign, '') }.to raise_error(NoMethodError)
+        end
+
+        it 'expects to call #new_entry private instance method' do
+          expect(inspector.call('new_entry', key: 'value')).to eq(true)
+        end
+      end
+
+      context 'when arguments missing -' do
+        it 'expects to raise ArgumentError for missing arguments' do
+          expect { corpus.send(:assign) }.to raise_error(ArgumentError)
         end
       end
     end
