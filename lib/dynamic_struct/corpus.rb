@@ -28,5 +28,9 @@ module DynamicStruct
     def verify(arguments)
       Hash === arguments && arguments.any?
     end
+
+    def assign(arguments)
+      arguments.each { |key, value| new_entry(key, value) }
+    end
   end
 end
