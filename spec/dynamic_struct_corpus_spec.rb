@@ -168,5 +168,32 @@ RSpec.describe DynamicStruct::Corpus do
         end
       end
     end
+
+    describe '#new_entry -' do
+      let(:corpus) { constructor.({}) }
+
+      it 'expects to define #new_entry as private instance method' do
+        expect(subject.private_method_defined?(:new_entry)).to eq(true)
+      end
+
+      it 'expects to has arity of two' do
+        expect(subject.instance_method(:new_entry).arity).to eq(2)
+      end
+
+      it 'expects to setup new key-value pair for atoms ivar' do
+        # before
+        expect(corpus.atoms?).to eq(false)
+
+        corpus.send(:new_entry, :key, 'value')
+
+        # after
+        expect(corpus.atoms?).to eq(true)
+      end
+
+      it 'expects to symbilize key argument for each new entry' do
+        corpus.send(:new_entry, 'key', 'value')
+        expect(corpus.instance_variable_get(:@atoms).keys).to include(:key)
+      end
+    end
   end
 end
