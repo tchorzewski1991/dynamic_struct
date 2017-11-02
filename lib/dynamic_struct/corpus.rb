@@ -36,5 +36,17 @@ module DynamicStruct
     def new_entry(key, value)
       atoms[key.to_sym] = value
     end
+
+    def method_missing(name, value = nil)
+      name = name.to_sym
+
+      atoms.key?(name) ?
+        atoms[name] : name.match?(/(\w+)={1}$/) ?
+          new_entry(name[0...-1], value) : nil
+    end
+
+    def respond_to_missing?(name, include_private = false)
+      atoms.key?(name.to_sym) || super
+    end
   end
 end
