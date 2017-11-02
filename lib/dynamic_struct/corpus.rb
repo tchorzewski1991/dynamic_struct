@@ -44,5 +44,9 @@ module DynamicStruct
         atoms[name] : name.match?(/(\w+)={1}$/) ?
           new_entry(name[0...-1], value) : nil
     end
+
+    def respond_to_missing?(name)
+      atoms.key?(name.to_sym) || super
+    end
   end
 end
