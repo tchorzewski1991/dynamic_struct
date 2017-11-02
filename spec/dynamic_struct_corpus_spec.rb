@@ -58,6 +58,10 @@ RSpec.describe DynamicStruct::Corpus do
       it 'expects to call #verify private instance method' do
         expect(inspector.call('verify')).to eq(true)
       end
+
+      it 'expects to call #assign private instance method' do
+        expect(inspector.call('assign', key: 'value')).to eq(true)
+      end
     end
   end
 
