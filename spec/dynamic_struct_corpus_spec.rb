@@ -2,9 +2,16 @@ require 'spec_helper'
 
 RSpec.describe DynamicStruct::Corpus do
   subject { described_class }
-  let(:arguments) { { key: 'value' } }
-  let(:corpus) { subject.new(arguments) }
 
+  # Constructor refers to flexible subject entity builder
+  let(:constructor) do
+    ->(arguments = nil) do
+      arguments.nil? && subject.new || subject.new(arguments)
+    end
+  end
+
+  # Inspector refers to observer for messages sent to entity
+  # during subject initialization
   let(:inspector) do
     ->(name) do
       klass = Class.new(subject) do
