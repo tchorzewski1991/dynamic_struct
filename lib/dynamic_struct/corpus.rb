@@ -32,5 +32,9 @@ module DynamicStruct
     def assign(arguments)
       arguments.each { |key, value| new_entry(key, value) }
     end
+
+    def new_entry(key, value)
+      atoms[key.to_sym] = value
+    end
   end
 end
