@@ -1,7 +1,7 @@
 module DynamicStruct
   class Corpus
     def initialize(arguments)
-      @atoms = {} and verify(arguments)
+      @atoms = {} and verify(arguments) and assign(arguments)
     end
 
     def inspect
