@@ -208,5 +208,25 @@ RSpec.describe DynamicStruct::Corpus do
         expect(corpus.second).to eq('second')
       end
     end
+
+    describe '#respond_to_missing? -' do
+      let(:corpus) { constructor.(first: 'first') }
+
+      it 'expects to define #respond_to_missing? as private instance method' do
+        expect(subject.private_method_defined?(:respond_to_missing?)).to eq(true)
+      end
+
+      it 'expects to return true for existing atoms key' do
+        expect(corpus.respond_to?(:first)).to eq(true)
+      end
+
+      it 'expects to return true for predefined instance method' do
+        expect(corpus.respond_to?(:atoms?)).to eq(true)
+      end
+
+      it 'expects to return false for non-existing atoms key' do
+        expect(corpus.respond_to?(:second)).to eq(false)
+      end
+    end
   end
 end

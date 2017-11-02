@@ -45,7 +45,7 @@ module DynamicStruct
           new_entry(name[0...-1], value) : nil
     end
 
-    def respond_to_missing?(name)
+    def respond_to_missing?(name, include_private = false)
       atoms.key?(name.to_sym) || super
     end
   end
