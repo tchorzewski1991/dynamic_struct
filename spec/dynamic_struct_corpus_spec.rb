@@ -187,5 +187,26 @@ RSpec.describe DynamicStruct::Corpus do
         expect(corpus.instance_variable_get(:@atoms).keys).to include(:key)
       end
     end
+
+    describe '#method_missing -' do
+      let(:corpus) { constructor.(first: 'first') }
+
+      it 'expects to define #method_missing as private instance method' do
+        expect(subject.private_method_defined?(:method_missing)).to eq(true)
+      end
+
+      it 'expects to return value for existing atoms key' do
+        expect(corpus.first).to eq('first')
+      end
+
+      it 'expects to return nil for non-existing atoms key' do
+        expect(corpus.second).to eq(nil)
+      end
+
+      it 'expects to set value of non-existing atoms key' do
+        corpus.second = 'second'
+        expect(corpus.second).to eq('second')
+      end
+    end
   end
 end
