@@ -26,7 +26,7 @@ RSpec.describe DynamicStruct::Corpus do
 
       result = begin
         instance = klass.new(arguments || {})
-        instance.induction
+        instance.induction & true
       rescue NoMethodError
         false
       end
