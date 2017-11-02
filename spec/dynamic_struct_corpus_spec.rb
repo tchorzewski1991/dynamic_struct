@@ -36,23 +36,23 @@ RSpec.describe DynamicStruct::Corpus do
   end
 
   describe 'initialize -' do
-    it 'expects to initialize atoms ivar' do
-      expect(corpus.instance_variable_defined?(:@atoms)).to eq(true)
-    end
-
     context 'when arguments missing -' do
+      let(:corpus) { constructor.() }
+
       it 'expects to raise ArgumentError' do
-        expect { subject.new }.to raise_error(ArgumentError)
+        expect { corpus }.to raise_error(ArgumentError)
       end
     end
 
     context 'when arguments present -' do
-      it 'expects to defined atoms ivar' do
+      let(:corpus) { constructor.(key: 'value') }
+
+      it 'expects to define atoms ivar' do
         expect(corpus.instance_variable_defined?(:@atoms)).to eq(true)
       end
 
-      it 'expects to set atoms ivar with empty Hash' do
-        expect(corpus.instance_variable_get(:@atoms).keys).to be_empty
+      it 'expects atoms ivar to be an instance of Hash' do
+        expect(corpus.instance_variable_get(:@atoms)).to be_an(Hash)
       end
 
       it 'expects to call #verify private instance method' do
@@ -63,22 +63,31 @@ RSpec.describe DynamicStruct::Corpus do
 
   describe 'custom instance methods -' do
     describe '#atoms -' do
+      let(:corpus) { constructor.(key: 'value') }
+
       it 'expects to define #atoms as private attribute reader' do
         expect(subject.private_method_defined?(:atoms)).to eq(true)
       end
 
-      it 'refutes to call #atoms from public interface' do
-        expect { corpus.atoms }.to raise_error(NoMethodError)
+      it 'expects to return nil when invoked from public interface' do
+        expect(corpus.atoms).to eq(nil)
       end
     end
 
     describe '#atoms? -' do
+      let(:empty_corpus) { constructor.({}) }
+      let(:filled_corpus) { constructor.(key: 'value') }
+
       it 'expects to define #atoms? as public instance method' do
         expect(subject.public_method_defined?(:atoms?)).to eq(true)
       end
 
-      it 'expects to return false for empty atoms ivar' do
-        expect(corpus.atoms?).to eq(false)
+      it 'expects to return false for empty corpus' do
+        expect(empty_corpus.atoms?).to eq(false)
+      end
+
+      it 'expects to return true for filled corpus' do
+        expect(filled_corpus.atoms?).to eq(true)
       end
     end
 
@@ -88,15 +97,18 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       context 'when atoms present -' do
+        let(:corpus) { constructor.(key: :value) }
+
         it 'expects to match schema for corpus with atoms' do
-          corpus.instance_variable_set(:@atoms, key: :value)
           expect(corpus.inspect).to match(/<DynamicStruct::Corpus key=:value>/)
         end
       end
 
       context 'when atoms missing -' do
+        let(:corpus) { constructor.({}) }
+
         it 'expects to match schema for corpus without atoms' do
-          expect(subject.new({}).inspect).to match(/<DynamicStruct::Corpus>/)
+          expect(corpus.inspect).to match(/<DynamicStruct::Corpus>/)
         end
       end
     end
@@ -107,6 +119,8 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       context 'when arguments present -' do
+        let(:corpus) { constructor.({}) }
+
         it 'expects to return true for Hash argument' do
           expect(corpus.send(:verify, key: 'value')).to eq(true)
         end
@@ -121,6 +135,8 @@ RSpec.describe DynamicStruct::Corpus do
       end
 
       context 'when arguments missing -' do
+        let(:corpus) { constructor.({}) }
+
         it 'expects to raise ArgumentError for missing arguments' do
           expect { corpus.send(:verify) }.to raise_error(ArgumentError)
         end
