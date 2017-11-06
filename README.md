@@ -4,6 +4,7 @@
 
 DynamicStruct is a data structure which allows for fetching attributes by simple method invocation. From technical point of view it is quite similar to data structure commonly known as OpenStruct.
 
+
 ## Installation
 
 Currently under development.

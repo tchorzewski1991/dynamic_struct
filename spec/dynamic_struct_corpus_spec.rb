@@ -228,5 +228,48 @@ RSpec.describe DynamicStruct::Corpus do
         expect(corpus.respond_to?(:second)).to eq(false)
       end
     end
+
+    describe '#[] -' do
+      let(:corpus) { constructor.(first: 'first') }
+
+      it 'expects to define #[] as public instance method' do
+        expect(subject.public_method_defined?(:[])).to eq(true)
+      end
+
+      it 'expects to return value for existing key' do
+        expect(corpus[:first]).to eq('first')
+      end
+
+      it 'expects to return nil for missing key' do
+        expect(corpus[:missing]).to be_nil
+      end
+
+      it 'expects to accept both symbol and string' do
+        expect(corpus['first']).to eq('first')
+      end
+    end
+
+    describe '#[]= -' do
+      let(:corpus) { constructor.({}) }
+
+      it 'expects to define #[]= as public instance method' do
+        expect(subject.public_method_defined?(:[]=)).to eq(true)
+      end
+
+      it 'expects to set new entry for missing key' do
+        # before #[]= call
+        expect(corpus[:first]).to eq(nil)
+
+        corpus[:first] = 'first'
+
+        # after #[]= call
+        expect(corpus[:first]).to eq('first')
+      end
+
+      it 'expects to accept both symbol and string' do
+        corpus[:first] = 'first' and corpus['second'] = 'second'
+        expect([corpus[:first], corpus[:second]]).to eq(['first', 'second'])
+      end
+    end
   end
 end
