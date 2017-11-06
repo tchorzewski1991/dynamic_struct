@@ -21,6 +21,14 @@ module DynamicStruct
       atoms.any?
     end
 
+    def [](key)
+      atoms[key.to_sym]
+    end
+
+    def []=(key, value)
+      new_entry(key, value)
+    end
+
     private
 
     attr_reader :atoms
