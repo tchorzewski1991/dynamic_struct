@@ -268,7 +268,7 @@ RSpec.describe DynamicStruct::Corpus do
 
       it 'expects to accept both symbol and string' do
         corpus[:first] = 'first' and corpus['second'] = 'second'
-        expect([corpus[:first], corpus[:second]]).to eq(['first', 'second'])
+        expect([corpus[:first], corpus[:second]]).to eq(%w(first second))
       end
     end
   end
