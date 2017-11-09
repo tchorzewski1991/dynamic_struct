@@ -23,6 +23,47 @@ RSpec::Matchers.define :call do |target|
   #   )
   # end
 
+  # Mock subject
+  #
+  # Argument used by RSpec::Matchers#match is class that we want to describe.
+  # First step is to create 'Class' class object with inheritance involved.
+  # Our 'mock' basically is mimic of our subject class. As we defined that
+  # 'mimic' class we can do with that class whatever we want, as it is safe
+  # operation. As all operation are kind of safe operations we can redefine
+  # method, that we want to inspect.
+
+  # We need to take consideration on three cases:
+  #
+  # 1) There is no such a method:
+  #    Case will be rescued and indication will be setup to false.
+  #
+  # 2) Method has been found, but that method call depends on entry arguments:
+  #    Case will be rescued and indication will be setup to false
+  #
+  # 3) Method has been found and called correctly:
+  #    Indication will be setup to true
+
+  def mock_subject(subject, target)
+    Class.new(subject) do
+      attr_reader :induction
+
+      class_eval %(
+        def #{target}(*)
+          begin
+            result = super
+          rescue ArgumentError
+            nil
+          rescue NoMethodError
+            @induction = false
+          ensure
+            instance_variable_defined?(:@induction) || @induction = true
+            result
+          end
+        end
+      )
+    end
+  end
+
   match do |subject|
     subject = mock_subject(subject, target)
     instance = subject.new({ key: 'value' })
