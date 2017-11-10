@@ -1,5 +1,4 @@
 RSpec::Matchers.define :call do |target|
-
   # The main responsibility of #call(...).inside(...) matcher is to create
   # flexible mechanism for observing 'target' method invocation during
   # execution of 'host' method. There is a lot of metaprogramming in
@@ -86,7 +85,7 @@ RSpec::Matchers.define :call do |target|
 
   match do |subject|
     subject = mock_subject(subject, target)
-    instance = subject.new({ key: 'value' })
+    instance = subject.new(key: 'value')
 
     (instance.induction & true) || begin
       instance
