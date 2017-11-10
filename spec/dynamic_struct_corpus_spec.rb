@@ -246,5 +246,25 @@ RSpec.describe DynamicStruct::Corpus do
         expect([corpus[:first], corpus[:second]]).to eq(%w(first second))
       end
     end
+
+    describe '#eql? -' do
+      let(:corpus) { constructor.({}) }
+
+      it 'expects to define #eql? as public instance method' do
+        expect(subject.public_method_defined?(:eql?)).to eq(true)
+      end
+
+      it 'expects to has arity of one' do
+        expect(subject.method(:eql?).arity).to eq(1)
+      end
+
+      it 'expects to depend on #hash public instance method' do
+        is_expected.to(
+          call('hash').inside('eql?') do |host|
+            host.argument = corpus
+          end
+        )
+      end
+    end
   end
 end
