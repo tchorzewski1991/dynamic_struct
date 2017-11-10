@@ -64,6 +64,26 @@ RSpec::Matchers.define :call do |target|
     end
   end
 
+  # Mock host
+
+  # Problem occurs when we need to call our 'host' method with arguments.
+  # There needs to be some distinction between when we have some arguments for
+  # our host method, and when method is called without any argument. The easiest
+  # way will be to create another standalone 'Class' class object with
+  # corresponding accessors.
+
+  def mock_host
+    Class.new do
+      attr_reader :name
+      attr_accessor :argument
+
+      def initialize(name)
+        @name = name
+        yield(self) if block_given?
+      end
+    end
+  end
+
   match do |subject|
     subject = mock_subject(subject, target)
     instance = subject.new({ key: 'value' })
