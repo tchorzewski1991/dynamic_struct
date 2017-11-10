@@ -30,12 +30,12 @@ RSpec.describe DynamicStruct::Corpus do
         expect(corpus.instance_variable_get(:@atoms)).to be_an(Hash)
       end
 
-      it 'expects to call #verify private instance method' do
-        expect(inspector.call('verify')).to eq(true)
+      it 'expects to depend on #verify private instance method' do
+        is_expected.to call('verify').inside('new')
       end
 
-      it 'expects to call #assign private instance method' do
-        expect(inspector.call('assign', key: 'value')).to eq(true)
+      it 'expects to depend on #assign private instance method' do
+        is_expected.to call('assign').inside('new')
       end
     end
   end
@@ -131,8 +131,8 @@ RSpec.describe DynamicStruct::Corpus do
         expect { corpus.send(:assign, '') }.to raise_error(NoMethodError)
       end
 
-      it 'expects to call #new_entry private instance method' do
-        expect(inspector.call('new_entry', key: 'value')).to eq(true)
+      it 'expects to depend on #new_entry private instance method' do
+        is_expected.to call('new_entry').inside('assign')
       end
     end
 
