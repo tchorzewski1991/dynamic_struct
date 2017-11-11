@@ -29,6 +29,16 @@ module DynamicStruct
       new_entry(key, value)
     end
 
+    def eql?(other)
+      hash == other.hash
+    end
+
+    def hash
+      atoms.hash
+    end
+
+    alias == eql?
+
     private
 
     attr_reader :atoms
