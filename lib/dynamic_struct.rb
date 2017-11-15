@@ -6,8 +6,10 @@ require_relative './dynamic_struct/corpus'
 
 module DynamicStruct
   class << self
-    def construct(arguments = nil)
-      Corpus.new(arguments)
+    def construct(**arguments)
+      Corpus.new(arguments).tap do |corpus|
+        yield(corpus) if block_given?
+      end
     end
   end
 end
