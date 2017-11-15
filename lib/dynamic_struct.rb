@@ -6,7 +6,7 @@ require_relative './dynamic_struct/corpus'
 
 module DynamicStruct
   class << self
-    def build(arguments = nil)
+    def construct(arguments = nil)
       Corpus.new(arguments)
     end
   end
