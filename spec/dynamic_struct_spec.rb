@@ -18,17 +18,17 @@ RSpec.describe DynamicStruct do
   end
 
   describe 'custom methods -' do
-    context '#build -' do
+    context '#construct -' do
       it 'expects subject respond to context' do
-        expect(subject.respond_to?(:build)).to be_truthy
+        expect(subject.respond_to?(:construct)).to be_truthy
       end
 
       it 'expects context to be a singleton method' do
-        expect(subject.singleton_class.method_defined?(:build)).to eq(true)
+        expect(subject.singleton_class.method_defined?(:construct)).to eq(true)
       end
 
       it 'expects context to return instance of DynamicStruct::Corpus' do
-        expect(subject.build.class).to be(DynamicStruct::Corpus)
+        expect(subject.construct.class).to be(DynamicStruct::Corpus)
       end
     end
   end
