@@ -10,120 +10,120 @@ RSpec.describe DynamicStruct::Corpus do
     end
   end
 
-  describe 'initialize -' do
-    context 'when arguments missing -' do
+  describe 'initialization' do
+    context 'when arguments missing' do
       let(:corpus) { constructor.() }
 
-      it 'expects to raise ArgumentError' do
+      it 'raises ArgumentError' do
         expect { corpus }.to raise_error(ArgumentError)
       end
     end
 
-    context 'when arguments present -' do
+    context 'when arguments present' do
       let(:corpus) { constructor.(key: 'value') }
 
-      it 'expects to define atoms ivar' do
+      it 'defines atoms ivar' do
         expect(corpus.instance_variable_defined?(:@atoms)).to eq(true)
       end
 
-      it 'expects atoms ivar to be an instance of Hash' do
+      it 'is expected atoms ivar to be an instance of Hash' do
         expect(corpus.instance_variable_get(:@atoms)).to be_an(Hash)
       end
 
-      it 'expects to depend on #verify private instance method' do
+      it 'depends on #verify private instance method' do
         is_expected.to call('verify').inside('new')
       end
 
-      it 'expects to depend on #assign private instance method' do
+      it 'depends on #assign private instance method' do
         is_expected.to call('assign').inside('new')
       end
     end
   end
 
-  describe 'custom instance methods -' do
-    describe '#atoms -' do
+  describe 'custom instance methods' do
+    describe '#atoms' do
       let(:corpus) { constructor.(key: 'value') }
 
-      it 'expects to define #atoms as private attribute reader' do
+      it 'defines #atoms as private attribute reader' do
         expect(subject.private_method_defined?(:atoms)).to eq(true)
       end
     end
 
-    describe '#atoms? -' do
+    describe '#atoms?' do
       let(:empty_corpus) { constructor.({}) }
       let(:filled_corpus) { constructor.(key: 'value') }
 
-      it 'expects to define #atoms? as public instance method' do
+      it 'defines #atoms? as public instance method' do
         expect(subject.public_method_defined?(:atoms?)).to eq(true)
       end
 
-      it 'expects to return false for empty corpus' do
+      it 'returns false for empty corpus' do
         expect(empty_corpus.atoms?).to eq(false)
       end
 
-      it 'expects to return true for filled corpus' do
+      it 'returns true for filled corpus' do
         expect(filled_corpus.atoms?).to eq(true)
       end
     end
 
-    describe '#inspect -' do
-      it 'expects to define #inspect as public instance method' do
+    describe '#inspect' do
+      it 'defines #inspect as public instance method' do
         expect(subject.public_method_defined?(:inspect)).to eq(true)
       end
 
-      it 'expects to has arity of zero' do
+      it 'has arity of zero' do
         expect(subject.instance_method(:inspect).arity).to eq(0)
       end
 
-      context 'when atoms present -' do
+      context 'when atoms present' do
         let(:corpus) { constructor.(key: :value) }
 
-        it 'expects to match schema for corpus with atoms' do
+        it 'matches schema for corpus with atoms' do
           expect(corpus.inspect).to match(/<DynamicStruct::Corpus key=:value>/)
         end
       end
 
-      context 'when atoms missing -' do
+      context 'when atoms missing' do
         let(:corpus) { constructor.({}) }
 
-        it 'expects to match schema for corpus without atoms' do
+        it 'matches schema for corpus without atoms' do
           expect(corpus.inspect).to match(/<DynamicStruct::Corpus>/)
         end
       end
     end
 
-    describe '#verify -' do
+    describe '#verify' do
       let(:corpus) { constructor.({}) }
 
-      it 'expects to define #verify as private instance method' do
+      it 'defines #verify as private instance method' do
         expect(subject.private_method_defined?(:verify)).to eq(true)
       end
 
-      it 'expects to has arity of one' do
+      it 'has arity of one' do
         expect(subject.instance_method(:verify).arity).to eq(1)
       end
 
-      it 'expects to return true for non-empty Hash argument' do
+      it 'returns true for non-empty Hash argument' do
         expect(corpus.send(:verify, key: 'value')).to eq(true)
       end
 
-      it 'expects to return false for empty Hash argument' do
+      it 'returns false for empty Hash argument' do
         expect(corpus.send(:verify, {})).to eq(false)
       end
 
-      it 'expects to return false for argument other than Hash' do
+      it 'returns false for argument other than Hash' do
         expect(corpus.send(:verify, [])).to eq(false)
       end
     end
 
-    describe '#assign -' do
+    describe '#assign' do
       let(:corpus) { constructor.({}) }
 
-      it 'expects to define #assign as private instance method' do
+      it 'defines #assign as private instance method' do
         expect(subject.private_method_defined?(:assign)).to eq(true)
       end
 
-      it 'expects to has arity of one' do
+      it 'has arity of one' do
         expect(subject.instance_method(:assign).arity).to eq(1)
       end
 
@@ -131,7 +131,7 @@ RSpec.describe DynamicStruct::Corpus do
         expect { corpus.send(:assign, '') }.to raise_error(NoMethodError)
       end
 
-      it 'expects to depend on #new_entry private instance method' do
+      it 'depends on #new_entry private instance method' do
         is_expected.to call('new_entry').inside('assign')
       end
     end
@@ -139,15 +139,15 @@ RSpec.describe DynamicStruct::Corpus do
     describe '#new_entry -' do
       let(:corpus) { constructor.({}) }
 
-      it 'expects to define #new_entry as private instance method' do
+      it 'defines #new_entry as private instance method' do
         expect(subject.private_method_defined?(:new_entry)).to eq(true)
       end
 
-      it 'expects to has arity of two' do
+      it 'has arity of two' do
         expect(subject.instance_method(:new_entry).arity).to eq(2)
       end
 
-      it 'expects to setup new key-value pair for atoms ivar' do
+      it 'setups new key-value pair for atoms ivar' do
         # before
         expect(corpus.atoms?).to eq(false)
 
@@ -157,81 +157,81 @@ RSpec.describe DynamicStruct::Corpus do
         expect(corpus.atoms?).to eq(true)
       end
 
-      it 'expects to symbilize key argument for each new entry' do
+      it 'symbilizes key argument for each new entry' do
         corpus.send(:new_entry, 'key', 'value')
         expect(corpus.instance_variable_get(:@atoms).keys).to include(:key)
       end
     end
 
-    describe '#method_missing -' do
+    describe '#method_missing' do
       let(:corpus) { constructor.(first: 'first') }
 
-      it 'expects to define #method_missing as private instance method' do
+      it 'defines #method_missing as private instance method' do
         expect(subject.private_method_defined?(:method_missing)).to eq(true)
       end
 
-      it 'expects to return value for existing atoms key' do
+      it 'returns value for existing atoms key' do
         expect(corpus.first).to eq('first')
       end
 
-      it 'expects to return nil for non-existing atoms key' do
+      it 'returns nil for non-existing atoms key' do
         expect(corpus.second).to eq(nil)
       end
 
-      it 'expects to set value of non-existing atoms key' do
+      it 'sets value of non-existing atoms key' do
         corpus.second = 'second'
         expect(corpus.second).to eq('second')
       end
     end
 
-    describe '#respond_to_missing? -' do
+    describe '#respond_to_missing?' do
       let(:corpus) { constructor.(first: 'first') }
 
-      it 'expects to define #respond_to_missing? as private instance method' do
+      it 'defines #respond_to_missing? as private instance method' do
         expect(subject.private_method_defined?(:respond_to_missing?)).to eq(true)
       end
 
-      it 'expects to return true for existing atoms key' do
+      it 'returns true for existing atoms key' do
         expect(corpus.respond_to?(:first)).to eq(true)
       end
 
-      it 'expects to return true for predefined instance method' do
+      it 'returns true for predefined instance method' do
         expect(corpus.respond_to?(:atoms?)).to eq(true)
       end
 
-      it 'expects to return false for non-existing atoms key' do
+      it 'returns false for non-existing atoms key' do
         expect(corpus.respond_to?(:second)).to eq(false)
       end
     end
 
-    describe '#[] -' do
+    describe '#[]' do
       let(:corpus) { constructor.(first: 'first') }
 
-      it 'expects to define #[] as public instance method' do
+      it 'defines #[] as public instance method' do
         expect(subject.public_method_defined?(:[])).to eq(true)
       end
 
-      it 'expects to return value for existing key' do
+      it 'returns value for existing key' do
         expect(corpus[:first]).to eq('first')
       end
 
-      it 'expects to return nil for missing key' do
+      it 'return nil for missing key' do
         expect(corpus[:missing]).to be_nil
       end
 
-      it 'expects to accept both symbol and string' do
+      it 'accepts both symbol and string' do
         expect(corpus['first']).to eq('first')
       end
     end
 
-    describe '#[]= -' do
+    describe '#[]=' do
       let(:corpus) { constructor.({}) }
 
-      it 'expects to define #[]= as public instance method' do
+      it 'defines #[]= as public instance method' do
         expect(subject.public_method_defined?(:[]=)).to eq(true)
       end
 
-      it 'expects to set new entry for missing key' do
+      it 'sets new entry for missing key' do
         # before #[]= call
         expect(corpus[:first]).to eq(nil)
 
@@ -241,24 +241,24 @@ RSpec.describe DynamicStruct::Corpus do
         expect(corpus[:first]).to eq('first')
       end
 
-      it 'expects to accept both symbol and string' do
+      it 'accepts both symbol and string' do
         corpus[:first] = 'first' and corpus['second'] = 'second'
         expect([corpus[:first], corpus[:second]]).to eq(%w(first second))
       end
     end
 
-    describe '#eql? -' do
+    describe '#eql?' do
       let(:corpus) { constructor.({}) }
 
-      it 'expects to define #eql? as public instance method' do
+      it 'defines #eql? as public instance method' do
         expect(subject.public_method_defined?(:eql?)).to eq(true)
       end
 
-      it 'expects to has arity of one' do
+      it 'has arity of one' do
         expect(subject.method(:eql?).arity).to eq(1)
       end
 
-      it 'expects to depend on #hash public instance method' do
+      it 'depends on #hash public instance method' do
         is_expected.to(
           call('hash').inside('eql?') do |host|
             host.argument = corpus
