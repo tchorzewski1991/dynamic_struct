@@ -268,7 +268,7 @@ RSpec.describe DynamicStruct::Corpus do
     end
 
     describe '#each' do
-      let(:corpus) { constructor.({ one: 'two', three: 'four' }) }
+      let(:corpus) { constructor.(one: 'two', three: 'four') }
 
       it 'defines #each as public instance method' do
         expect(subject.public_method_defined?(:each)).to eq(true)
@@ -285,7 +285,7 @@ RSpec.describe DynamicStruct::Corpus do
 
         it 'yields each key-value pair to the block' do
           result = [] and begin
-            corpus.each { |key, value| result << key }
+            corpus.each { |key, _| result << key }
           end
 
           expect(result).to contain_exactly(:one, :three)
