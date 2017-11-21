@@ -39,6 +39,11 @@ module DynamicStruct
 
     alias == eql?
 
+    def each(&block)
+      return atoms.enum_for(__callee__) unless block_given?
+      tap { atoms.each(&block) }
+    end
+
     private
 
     attr_reader :atoms

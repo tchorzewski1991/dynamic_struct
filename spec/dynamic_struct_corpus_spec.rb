@@ -266,5 +266,37 @@ RSpec.describe DynamicStruct::Corpus do
         )
       end
     end
+
+    describe '#each' do
+      let(:corpus) { constructor.(one: 'two', three: 'four') }
+
+      it 'defines #each as public instance method' do
+        expect(subject.public_method_defined?(:each)).to eq(true)
+      end
+
+      it 'has arity of 0' do
+        expect(subject.instance_method(:each).arity).to eq(0)
+      end
+
+      context 'when block' do
+        it 'returns corpus after block execution' do
+          expect(corpus.each { |key, value| [key, value] }).to eq(corpus)
+        end
+
+        it 'yields each key-value pair to the block' do
+          result = [] and begin
+            corpus.each { |key, _| result << key }
+          end
+
+          expect(result).to contain_exactly(:one, :three)
+        end
+      end
+
+      context 'when no block' do
+        it 'returns explicit enumerator' do
+          expect(corpus.each).to be_an(Enumerator)
+        end
+      end
+    end
   end
 end
