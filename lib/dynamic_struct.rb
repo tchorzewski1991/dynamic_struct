@@ -1,4 +1,4 @@
-# DynamicStruct is data structure similar on OpenStruct,
+# DynamicStruct is data structure similar to OpenStruct,
 # but a little more optimized
 
 require_relative './dynamic_struct/version'
